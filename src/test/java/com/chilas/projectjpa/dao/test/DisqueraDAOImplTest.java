@@ -55,6 +55,20 @@ class DisqueraDAOImplTest {
 		this.disqeuraDAO.delete(id);
 	}
 
+	
+	/**
+	 * 
+	 * void testConsultar(){
+	 * 	List<Disquera> disquerasConsultadas = this.disqueraDAO.consultar();
+	 * 
+	 * 	asserTrue(disquerasConsultadas.size() > 0);
+	 * 	disquerasConsultadas.forEach(disquera -> {
+	 * 		System.out.println("Disquera: " + disquera.getDescripcion());
+	 * 	});
+	 * }
+	 * 
+	 */
+	
 	/**
 	 * Test method for {@link com.chilas.projectjpa.dao.impl.DisqueraDAOImpl#consultarById(java.lang.Long)}.
 	 */
@@ -63,5 +77,24 @@ class DisqueraDAOImplTest {
 		Disquera disquera =  this.disqeuraDAO.consultarById(10L);
 		System.out.println("Disquera " + disquera.getDescripcion());
 	}
+	
+	@Test
+	void testConsultarByDescripcionJPQL() {
+		Disquera disqueraConsultada = this.disqeuraDAO .consultarByDescripcionJPQL("MegaForce");
+		assertNotNull(disqueraConsultada);
+		System.out.println("Disquera: " + disqueraConsultada);
+	}
 
+	@Test
+	void testConsultarByDescripcionNative() {
+		Disquera disqueraConsultada = this.disqeuraDAO .consultarByDescripcionNative("MegaForce");
+		assertNotNull(disqueraConsultada);
+		System.out.println("Disquera: " + disqueraConsultada);
+	}
+	
+	
+	
+	
+	
+	
 }

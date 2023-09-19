@@ -10,6 +10,10 @@
     
     <!-- Define las clases que seran mappeadas al configurarse la conexion a la DB  -->
     <class>com.chilas.projectjpa.entity.Disquera</class>
+        <class>com.chilas.projectjpa.entity.Genero</class>
+            <class>com.chilas.projectjpa.entity.SubGenero</class>
+        
+    
     
     <properties>
     	<property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />

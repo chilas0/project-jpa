@@ -22,34 +22,32 @@ import com.chilas.projectjpa.entity.Disquera;
  */
 public class DisqueraDAOImpl implements DisqueraDAO {
 
-
-
 	/**
 	 * 
-	 *Es static y final por que trae información de persistence.xml y esto nunca va cambiar a menos de que se haga manual 
+	 * Es static y final por que trae información de persistence.xml y esto nunca va
+	 * cambiar a menos de que se haga manual
 	 */
 	private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
 			.createEntityManagerFactory("persistenceChilas");
 
 	@Override
 	public void save(Disquera disquera) {
-		
+
 		/**
 		 * 
 		 */
 		EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
 
-		
 		EntityTransaction et = em.getTransaction();
-		
+
 		et.begin();
-		
+
 		try {
 			em.persist(disquera);
 			et.commit();
 		} catch (Exception e) {
-			
-			if(et != null) {
+
+			if (et != null) {
 				et.rollback();
 			}
 			e.printStackTrace();
@@ -62,17 +60,17 @@ public class DisqueraDAOImpl implements DisqueraDAO {
 	public void update(Disquera disquera) {
 
 		EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
-		
+
 		EntityTransaction et = em.getTransaction();
-		
+
 		et.begin();
-		
+
 		try {
 			em.merge(disquera);
 			et.commit();
 		} catch (Exception e) {
-			
-			if(et != null) {
+
+			if (et != null) {
 				et.rollback();
 			}
 			e.printStackTrace();
@@ -84,17 +82,17 @@ public class DisqueraDAOImpl implements DisqueraDAO {
 	@Override
 	public void delete(Long id) {
 		EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
-		Disquera disqueraConsultada =  em.find(Disquera.class, id);
+		Disquera disqueraConsultada = em.find(Disquera.class, id);
 		EntityTransaction et = em.getTransaction();
-		
+
 		et.begin();
-		
+
 		try {
 			em.remove(disqueraConsultada);
 			et.commit();
 		} catch (Exception e) {
-			
-			if(et != null) {
+
+			if (et != null) {
 				et.rollback();
 			}
 			e.printStackTrace();
@@ -102,27 +100,56 @@ public class DisqueraDAOImpl implements DisqueraDAO {
 			em.close();
 		}
 	}
-	
+
 	/**
-	@Override
-	public List<Disquera> consultar(){
-		EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
-		
-		TypedQuery<Disquera> queryDisquera = (TypedQuery<Disquera>) em.createQuery("FROM Disquera ORDER BY descripcion");
-		
-		
-		return queryDisquera.getSingleResult();
-	}*/
+	 * @Override public List<Disquera> consultar(){ EntityManager em =
+	 *           ENTITY_MANAGER_FACTORY.createEntityManager();
+	 * 
+	 *           TypedQuery<Disquera> queryDisquera = (TypedQuery<Disquera>)
+	 *           em.createQuery("FROM Disquera ORDER BY descripcion");
+	 * 
+	 * 
+	 *           return queryDisquera.getSingleResult(); }
+	 */
 
 	@Override
 	public Disquera consultarById(Long id) {
 		EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
 		Disquera disqueraConsultado = em.find(Disquera.class, id);
-		
-		if(disqueraConsultado == null) {
+
+		if (disqueraConsultado == null) {
 			throw new EntityNotFoundException("La disquera con el id " + id + " no se encontro");
 		}
 		return disqueraConsultado;
+	}
+
+	@Override
+	public Disquera consultarByDescripcionJPQL(String descripcion) {
+		EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+
+		TypedQuery<Disquera> queryDisquera = (TypedQuery<Disquera>) em
+				.createQuery("FROM Disquera WHERE descripcion = :desc");
+		queryDisquera.setParameter("desc", descripcion);
+
+		return queryDisquera.getSingleResult();
+	}
+
+	@Override
+	public Disquera consultarByDescripcionNative(String descripcion) {
+		EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+
+		TypedQuery<Disquera> queryDisquera = (TypedQuery<Disquera>) em
+				.createNativeQuery("SELECT * FROM disquera WHERE descripcion = :desc", Disquera.class);
+		
+		/**
+		 * Otra manera de enviar parametros a consulta 
+		 * .createNativeQuery("SELECT * FROM disquera WHERE descripcion = ?", Disquera.class);
+		 * queryDisquera.setParameter(1, descripcion);
+		 */
+		queryDisquera.setParameter("desc", descripcion);
+
+		return queryDisquera.getSingleResult();
+
 	}
 
 }
